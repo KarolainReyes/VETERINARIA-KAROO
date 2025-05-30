@@ -103,7 +103,7 @@ function idmascota() {
     return contmascota++;
 }
 
-function VerMascotasDueño() {
+function VerMascotasDueno() {
     let ccDueno = prompt("Ingresa el número de cédula del dueño para ver sus mascotas:");
     if (!ccDueno) {
         alert("Por favor, ingresa un número de cédula válido.");
@@ -126,50 +126,102 @@ function VerMascotasDueño() {
 function agregarMascota() {
     let idMascota = idmascota();
     alert("Su ID de mascota es: " + idMascota);
+    cedulaExistente = duenos.some(dueno => dueno.cedula === cedula);
+    let cedula = prompt("Ingresa el número de cédula del dueño de la mascota:");
     let nombreMascota = prompt("Ingresa el nombre de la mascota:");
     let especieMascota = prompt("Ingresa la especie de la mascota:");
     let edadMascota = parseInt(prompt("Ingresa la edad de la mascota:"));
-    let pesoMascota = prompt("Ingresa el peso de la mascota:");
+    let pesoMascota = parseFloat (prompt("Ingresa el peso de la mascota:"));
     let estadoMascota = prompt("Ingresa el estado de salud de la mascota:");
-    let ccDueño = alert("El dueño de la mascota es: ");
 
-    // Validación de campos
-    if (!nombreMascota || !especieMascota || isNaN(edadMascota) || !pesoMascota || !estadoMascota) {
-        alert("Por favor, completa todos los campos correctamente.");
+    if (!cedulaExistente) {
+        alert("No se encontró un dueño con esa cédula. Por favor, regístralo primero.");
         return;
     }
-    // Validación de datos
-    if (edadMascota < 0 || pesoMascota < 0) {
-        alert("La edad y el peso deben ser números positivos.");
-        return;
-    
-    }
-    if (estadoMascota.toLowerCase() !== "saludable" && estadoMascota.toLowerCase() !== "enfermo") {
-        alert("El estado de salud debe ser 'saludable' o 'enfermo'.");
-        return;
-    }
-    // Crear un objeto mascota y agregarlo al array
-    if (mascotas.some(mascota => mascota.nombre.toLowerCase() === nombreMascota.toLowerCase())) {
-        alert("Ya existe una mascota con ese nombre.");
-        return;
-    }
-    if (mascotas.some(mascota => mascota.especie.toLowerCase() === especieMascota.toLowerCase())) {
-        alert("Ya existe una mascota de esa especie.");
-        return;
-    }
+
 
     let nuevaMascota = {
+        id: idMascota,
         nombre: nombreMascota,
         especie: especieMascota,
         edad: edadMascota,
         peso: pesoMascota,
-        estado: estadoMascota
+        estado: estadoMascota,
+        cedula: ccDueno
     };
 
     mascotas.push(nuevaMascota);
     alert("¡Mascota agregada exitosamente!");
 }
 
+function mostrarMascotas() {                                
+    if (mascotas.length === 0) {
+        alert("No hay mascotas registradas.");
+        return;
+    }
+    
+    let mensaje = "Lista de mascotas:\n";
+    mascotas.forEach((mascota, index) => {
+        mensaje += `${index + 1}. Nombre: ${mascota.nombre}, Especie: ${mascota.especie}, Edad: ${mascota.edad}, Peso: ${mascota.peso}, Estado: ${mascota.estado}\n`;
+    });
+    
+    alert(mensaje);
+}
 
+function buscarMascotaPorNombre() {
+    let nombreMascota = prompt("Ingresa el nombre de la mascota que deseas buscar:");
+    
+    if (!nombreMascota) {
+        alert("Por favor, ingresa un nombre válido.");
+        return;
+    }
+    
+    let mascotaEncontrada = mascotas.find(mascota => mascota.nombre.toLowerCase() === nombreMascota.toLowerCase());
+    
+    if (mascotaEncontrada) {
+        alert(`Mascota encontrada: Nombre: ${mascotaEncontrada.nombre}, Especie: ${mascotaEncontrada.especie}, Edad: ${mascotaEncontrada.edad}, Peso: ${mascotaEncontrada.peso}, Estado: ${mascotaEncontrada.estado}`);
+    } else {
+        alert("No se encontró ninguna mascota con ese nombre.");
+    }
+}
+
+function actualizarEstadoSalud() {
+    let nombreMascota = prompt("Ingresa el nombre de la mascota cuyo estado de salud deseas actualizar:");
+    
+    if (!nombreMascota) {
+        alert("Por favor, ingresa un nombre válido.");
+        return;
+    }
+    
+    let mascotaEncontrada = mascotas.find(mascota => mascota.nombre.toLowerCase() === nombreMascota.toLowerCase());
+    
+    if (mascotaEncontrada) {
+        let nuevoEstado = prompt("Ingresa el nuevo estado de salud (saludable/enfermo):");
+        
+        if (nuevoEstado.toLowerCase() === "saludable" || nuevoEstado.toLowerCase() === "enfermo") {
+            mascotaEncontrada.estado = nuevoEstado;
+            alert("Estado de salud actualizado exitosamente.");
+        } else {
+            alert("El estado de salud debe ser 'saludable' o 'enfermo'.");
+        }
+    } else {
+        alert("No se encontró ninguna mascota con ese nombre.");
+    }
+}
+
+function eliminarMascota() {
+    if (mascotas.length === 0) {
+        alert("No hay mascotas registradas para eliminar.");
+        return;
+    }
+    
+    let indice = parseInt(prompt("Ingresa el número de la mascota que deseas eliminar (1 a " + mascotas.length + "):")) - 1;
+    
+    if (indice >= 0 && indice < mascotas.length) {
+        mascotas.splice(indice, 1);
+        alert("¡Mascota eliminada exitosamente!");
+    } else {
+        alert("Número de mascota inválido.");}
+    }
 
 mostrarMenu();
