@@ -53,3 +53,35 @@ function mostrarMenu() {
             alert("Opción no válida, por favor intenta de nuevo.");
     }
 }
+
+//Funciones para manejar los dueños
+function agregarDueno(callback = () => {}) {
+    alert("Registro de nuevo dueño.");
+    alert("Su ID de dueño es: ");
+    let nombreDueno = prompt("Ingrese su nombre:");
+    let ccDueno = prompt("Ingresa su número de cédula:");
+    let telefonoDueno = prompt("Ingresa el teléfono del dueño:");
+    let correoDueno = prompt("Su correo electrónico:");
+
+    let nuevoDueno = {
+        nombre: nombreDueno,
+        cedula: ccDueno,
+        telefono: telefonoDueno,
+        correo: correoDueno,
+    };
+    console.log(nuevoDueno);
+    
+setTimeout(function() {
+        duenos.push({
+            nombre: nuevoDueno.nombre,
+            ccDueño: nuevoDueno.cedula,
+            telefono: nuevoDueno.telefono,
+            correo: nuevoDueno.correo
+        });
+        console.log("!Dueño agregado exitosamente!");
+        alert("¡Dueño agregado exitosamente!");
+        callback();
+}, 1500);
+console.log("Guardando dueño en la base de datos...");
+}
+
