@@ -1,6 +1,7 @@
 alert("Bienvenido a la veterinaria de mascotas");
 let duenos = [];
 let contador = 1;
+let contmascota = 1;
 let mascotas = [];
 
 function mostrarMenu() {
@@ -61,8 +62,18 @@ function agregarDueno(callback = () => { }) {
     let idDueno = generarId();
     alert("Su ID de dueño es: " + idDueno);
     let nombreDueno = prompt("Ingrese su nombre:");
-    let ccDueno = prompt("Ingresa su número de cédula:");
-    let telefonoDueno = prompt("Ingresa el teléfono del dueño:");
+    let ccDueno = Number(prompt("Ingresa su número de cédula:"));
+    while(isNaN(ccDueno)) {
+        alert("Por favor, ingresa un número de cédula válido.");
+        ccDueno = Number(prompt("Ingresa su número de cédula:"));
+    }
+    alert("Regirtro exitoso!");
+    let telefonoDueno = Number(prompt("Ingresa el teléfono del dueño:"));
+    while(isNaN(telefonoDueno)) {
+        alert("Por favor, ingresa un número de teléfono válido.");
+        telefonoDueno = Number(prompt("Ingresa el teléfono del dueño:"));
+    }
+    alert("Registro exitoso!");
     let correoDueno = prompt("Su correo electrónico:");
 
     let nuevoDueno = {
@@ -88,6 +99,9 @@ function generarId() {
     return contador++;
 }
 
+function idmascota() {
+    return contmascota++;
+}
 
 function VerMascotasDueño() {
     let ccDueno = prompt("Ingresa el número de cédula del dueño para ver sus mascotas:");
@@ -110,7 +124,8 @@ function VerMascotasDueño() {
 // Funciones para manejar las mascotas
 
 function agregarMascota() {
-    alert("Su ID de mascota es: ");
+    let idMascota = idmascota();
+    alert("Su ID de mascota es: " + idMascota);
     let nombreMascota = prompt("Ingresa el nombre de la mascota:");
     let especieMascota = prompt("Ingresa la especie de la mascota:");
     let edadMascota = parseInt(prompt("Ingresa la edad de la mascota:"));
