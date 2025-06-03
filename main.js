@@ -1,8 +1,8 @@
 alert("Bienvenido a la veterinaria de mascotas");
-let duenos = [];
+const duenos = [];
 let contador = 1;
 let contmascota = 1;
-let mascotas = [];
+const mascotas = [];
 
 function mostrarMenu() {
     let opcion = prompt(
@@ -24,24 +24,23 @@ function mostrarMenu() {
             break;
         case "2":
             alert("Registrar una nueva mascota.");
-            agregarMascota(mostrarMenu);
+            agregarMascota();
             break;
         case "3":
             alert("Listar todas las mascotas.");
-            mostrarMascotas(mostrarMenu);
-
+            mostrarMascotas();
             break;
         case "4":
             alert("Buscar una mascota por nombre.");
-            buscarMascotaPorNombre(mostrarMenu);
+            buscarMascotaPorNombre();
             break;
         case "5":
             alert("Actualizar el estado de salud de una mascota.");
-            actualizarEstadoSalud(mostrarMenu);
+            actualizarEstadoSalud();
             break;
         case "6":
             alert("Eliminar una mascota por nombre.");
-            eliminarMascota(mostrarMenu);
+            eliminarMascota();
             break;
         case "7":
             alert("Ver mascotas de un dueño.");
@@ -62,8 +61,8 @@ function agregarDueno(callback = () => { }) {
     let idDueno = generarId();
     alert("Su ID de dueño es: " + idDueno);
     let nombreDueno = prompt("Ingrese su nombre:");
-    let ccDueno = Number(prompt("Ingresa su número de cédula:"));
-    while(isNaN(ccDueno)) {
+    let cedula = Number(prompt("Ingresa su número de cédula:"));
+    while(isNaN(cedula)) {
         alert("Por favor, ingresa un número de cédula válido.");
         ccDueno = Number(prompt("Ingresa su número de cédula:"));
     }
@@ -79,7 +78,7 @@ function agregarDueno(callback = () => { }) {
     let nuevoDueno = {
         id: idDueno,
         nombre: nombreDueno,
-        cedula: ccDueno,
+        cedula: cedula,
         telefono: telefonoDueno,
         correo: correoDueno,
     };
@@ -94,7 +93,6 @@ function agregarDueno(callback = () => { }) {
     console.log("Guardando dueño en la base de datos...");
 }
 
-
 function generarId() {
     return contador++;
 }
@@ -104,14 +102,14 @@ function idmascota() {
 }
 
 function VerMascotasDueno() {
-    let ccDueno = prompt("Ingresa el número de cédula del dueño para ver sus mascotas:");
-    if (!ccDueno) {
+    let cedula = prompt("Ingresa el número de cédula del dueño para ver sus mascotas:");
+    if (!cedula) {
         alert("Por favor, ingresa un número de cédula válido.");
         return;
     }
-    let mascotasDueno = mascotas.filter(mascota => mascota.ccDueño === ccDueno);
+    let mascotasDueno = mascotas.filter(mascota => mascota.cedulaDueno === cedula);
     if (mascotasDueno.length > 0) {
-        let mensaje = `Mascotas del dueño con cédula ${ccDueno}:\n`;
+        let mensaje = `Mascotas del dueño con cédula ${cedula}:\n`;
         mascotasDueno.forEach((mascota, index) => {
             mensaje += `${index + 1}. Nombre: ${mascota.nombre}, Especie: ${mascota.especie}, Edad: ${mascota.edad}, Peso: ${mascota.peso}, Estado: ${mascota.estado}\n`;
         });
@@ -119,26 +117,33 @@ function VerMascotasDueno() {
     } else {
         alert("No se encontraron mascotas para el dueño con esa cédula.");
     }
+    mostrarMenu();
 };
 
 // Funciones para manejar las mascotas
 
-function agregarMascota() {
-    let idMascota = idmascota();
-    alert("Su ID de mascota es: " + idMascota);
-    cedulaExistente = duenos.some(dueno => dueno.cedula === cedula);
-    let cedula = prompt("Ingresa el número de cédula del dueño de la mascota:");
-    let nombreMascota = prompt("Ingresa el nombre de la mascota:");
-    let especieMascota = prompt("Ingresa la especie de la mascota:");
-    let edadMascota = parseInt(prompt("Ingresa la edad de la mascota:"));
-    let pesoMascota = parseFloat (prompt("Ingresa el peso de la mascota:"));
-    let estadoMascota = prompt("Ingresa el estado de salud de la mascota:");
-
+function agregarMascota(callback = () => { }) {
+    let cedula = Number(prompt("Ingresa el número de cédula del dueño de la mascota:")) ;
+    const cedulaExistente = duenos.some(dueno => dueno.cedula === cedula);
     if (!cedulaExistente) {
         alert("No se encontró un dueño con esa cédula. Por favor, regístralo primero.");
         return;
     }
-
+    let idMascota = idmascota();
+    alert("Su ID de mascota es: " + idMascota);
+    let nombreMascota = prompt("Ingresa el nombre de la mascota:");
+    let especieMascota = prompt("Ingresa la especie de la mascota:");
+    let edadMascota = parseInt(prompt("Ingresa la edad de la mascota:"));
+        if (isNaN(edadMascota)) {
+            alert("La edad ingresada no es un número válido, por favor intentalo de nuevo.");
+            return;
+        }
+    let pesoMascota = parseFloat (prompt("Ingresa el peso de la mascota:"));
+        if (isNaN(pesoMascota)) {
+            alert("El peso ingresado no es un número válido, por favor intentalo de nuevo.");
+            return;
+        }
+    let estadoMascota = prompt("Ingresa el estado de salud de la mascota:");
 
     let nuevaMascota = {
         id: idMascota,
@@ -147,12 +152,20 @@ function agregarMascota() {
         edad: edadMascota,
         peso: pesoMascota,
         estado: estadoMascota,
-        cedula: ccDueno
+        cedulaDueno: cedula
     };
+    console.log(nuevaMascota);
 
-    mascotas.push(nuevaMascota);
-    alert("¡Mascota agregada exitosamente!");
+
+    setTimeout(function () {
+        mascotas.push(nuevaMascota);
+        console.log("Mascota agregada con éxito" , nuevaMascota);
+        alert(`Mascota "${nombreMascota}" agregada exitosamente.`)
+        callback();
+    }, 1500);
+    console.log("Guardando mascota en la base de datos...");
 }
+
 
 function mostrarMascotas() {                                
     if (mascotas.length === 0) {
@@ -166,6 +179,7 @@ function mostrarMascotas() {
     });
     
     alert(mensaje);
+    mostrarMenu();
 }
 
 function buscarMascotaPorNombre() {
